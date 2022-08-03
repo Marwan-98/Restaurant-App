@@ -1,11 +1,14 @@
 import React from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import pizza from "../../Assets/Pizza.png";
 import burger from "../../Assets/Burger.png";
 import crepe from "../../Assets/Crepe.png";
 import drink from "../../Assets/Drink.png";
+
+import * as Yup from "yup";
+
 
 import { items } from "../../utils/types";
 import "./CheckOut.css";
@@ -24,6 +27,9 @@ import {
 import { useFormik } from "formik";
 import { sendOrder } from "../../API/api";
 import { removeQuantity } from "../../actions/products.action";
+
+import {resetOrderItems} from "../../actions/order.action"
+import {resetCart} from "../../actions/cart.action"
 
 function CheckOut() {
   const dispatch = useDispatch();
@@ -57,9 +63,21 @@ const itemsImages = [pizza, burger, crepe, drink]
       address: "",
       city: "",
     },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .required("Name is required")
+        .max(20, "limit passed")
+        .min(3, "Please write 3 characters or more")
+        .matches(/[a-zA-Z]+\s[a-zA-Z]+/, "please put your first name and last name"),
+      mobile: Yup.string()
+        .required("mobile is required")
+        .min(10, "something's wrong with your phone number"),
+    }),
     onSubmit: (values) => {
       sendOrder(orders, values).then((res) => console.log(res));
       navigate("/success");
+      dispatch(resetOrderItems());
+      dispatch(resetCart());
     },
   });
 
@@ -67,7 +85,7 @@ const itemsImages = [pizza, burger, crepe, drink]
     <div className="checkout-body">
       <Container>
         <Row className="d-flex justify-content-center align-items-center">
-          <Col md={8}>
+          <Col md={8} xs={12}>
             <Form onSubmit={formik.handleSubmit}>
               <Form.Group className="mb-3 checkout-input">
                 <Form.Control
@@ -78,6 +96,9 @@ const itemsImages = [pizza, burger, crepe, drink]
                   value={formik.values.name}
                   onChange={formik.handleChange}
                 />
+                {formik.touched.name && formik.errors.name && (
+              <Alert variant="danger">{formik.errors.name}</Alert>
+            )}
               </Form.Group>
 
               <Form.Group className="mb-3 checkout-input">
@@ -89,6 +110,9 @@ const itemsImages = [pizza, burger, crepe, drink]
                   value={formik.values.mobile}
                   onChange={formik.handleChange}
                 />
+                {formik.touched.mobile && formik.errors.mobile && (
+              <Alert variant="danger">{formik.errors.mobile}</Alert>
+            )}
               </Form.Group>
 
               <Form.Group className="mb-3 checkout-input">
@@ -120,15 +144,15 @@ const itemsImages = [pizza, burger, crepe, drink]
               </Link>
             </Form>
           </Col>
-          <Col>
+          <Col md={4} xs={12}>
             <div className="cart-body">
               {orders.map((order) => {
                 return (
                   <Row>
-                    <Col className="text-end">
-                      <img className="item-img" src={itemsImages[order.category.name === "pizza" ? 0 : (order.category.name === "Burgers") ? 1 : (order.category.name === "Crepes") ? 2 : 3]} />
+                    <Col className="text-center" xs={12} lg={6}>
+                      <img className="check-item-img" src={itemsImages[order.category.name === "pizza" ? 0 : (order.category.name === "Burgers") ? 1 : (order.category.name === "Crepes") ? 2 : 3]} />
                     </Col>
-                    <Col>
+                    <Col xs={12}  lg={6} className="text-center">
                       <p>{order.itemName}</p>
                       <p>
                         Qty: {order.orderQty}

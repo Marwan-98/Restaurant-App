@@ -12,6 +12,8 @@ export const cart = (
       } else {
         return (state += action.payload);
       }
+    case "RESET_TOTAL":
+      return action.payload;
     default:
       return state;
       break;

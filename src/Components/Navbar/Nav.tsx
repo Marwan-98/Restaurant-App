@@ -17,11 +17,18 @@ import {
 } from "../../actions/order.action";
 import { removeQuantity } from "../../actions/products.action";
 
+import {
+  addQuantity,
+  subtractQuantity,
+} from "../../actions/products.action";
+
+
 import pizza from "../../Assets/Pizza.png";
 import burger from "../../Assets/Burger.png";
 import crepe from "../../Assets/Crepe.png";
 import drink from "../../Assets/Drink.png";
 
+import * as Yup from "yup";
 
 
 function Nav() {
@@ -36,9 +43,11 @@ function Nav() {
   function orderMaker(type: string, product: items) {
     if (type === "add") {
       dispatch(addOrderItem(product));
+      dispatch(addQuantity(product.id));
       dispatch(cart(product.price));
     } else if (type === "remove") {
       dispatch(removeOrderItem(product));
+      dispatch(subtractQuantity(product.id));
       dispatch(cart(-product.price));
     } else {
       dispatch(deleteOrderItem(product));
@@ -86,17 +95,16 @@ function Nav() {
       <Modal
         show={show}
         onHide={() => setShow(false)}
-        aria-labelledby="example-custom-modal-styling-title"
       >
         <Modal.Body>
           <div className="cart-body">
             {orders.map((order) => {
               return (
                 <Row key={Math.random()}>
-                  <Col className="text-end">
-                    <img className="item-img" src={itemsImages[order.category.name === "pizza" ? 0 : (order.category.name === "Burgers") ? 1 : (order.category.name === "Crepes") ? 2 : 3]} />
+                  <Col className="text-center" xs={12} md={6}>
+                    <img className="nav-item-img" src={itemsImages[order.category.name === "pizza" ? 0 : (order.category.name === "Burgers") ? 1 : (order.category.name === "Crepes") ? 2 : 3]} />
                   </Col>
-                  <Col>
+                  <Col xs={12} md={6} className="text-center">
                     <p>{order.itemName}</p>
                     <p>
                       Qty: {order.orderQty}

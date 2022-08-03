@@ -6,18 +6,18 @@ function Footer() {
   return (
     <div>
       <Container>
-        <Row>
-          <Col className="text-center">
+        <Row className="p-1 d-flex align-items-center">
+          <Col className="text-center" xs={12} md={6}>
             <span className="footer-text">OBSD</span>
             <img
               src={logo}
               width="30"
-              className="d-inline-block align-center logo"
+              className="d-inline-block logo"
               alt="Restaurant logo"
             />
           </Col>
-          <Col className="text-start">
-            <p>&copy; 2022 OBSD - All Rights Reserved.</p>
+          <Col className="text-center" xs={12} md={6}>
+            <span>&copy; 2022 OBSD - All Rights Reserved.</span>
           </Col>
         </Row>
       </Container>

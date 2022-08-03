@@ -7,6 +7,10 @@
   color: #303030;
 }
 
+.check-item-img {
+  width: 150px;
+}
+
 #name-input,
 #mobile-input,
 #address-input,
@@ -34,3 +38,5 @@ button {
   min-height: 100vh;
   margin-top: 80px;
 }
+
+

@@ -20,3 +20,10 @@ export const deleteOrderItem = (item: items) => {
     payload: item,
   };
 };
+
+export const resetOrderItems = () => {
+  return {
+    type: "RESET_CART",
+    payload: []
+  }
+}

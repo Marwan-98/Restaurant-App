@@ -42,6 +42,8 @@ export const orderReducer = (
       });
     case "DELETE_FROM_CART":
       return state.filter((item) => item.id !== action.payload.id);
+    case "RESET_CART":
+      return action.payload
     default:
       return state;
   }

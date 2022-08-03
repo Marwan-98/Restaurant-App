@@ -15,22 +15,19 @@ import { checkOrders, getDashboardOrders } from "../../API/api";
 import { orders } from "../../utils/types";
 import "./Dashboard.css";
 import moment from "moment";
-import ReactStopwatch from "react-stopwatch";
 
 import Clock from "react-live-clock";
 
 function Pending() {
   const orders = useSelector(
     (state: { orders: orders[] }) => state.orders
-  ).filter((order) => !order.completed);
+  ).filter((order) => !order.completed)
 
   const dispatch = useDispatch();
   console.log(orders);
 
   const addCheck = (orderId: number, itemId: number) => {
-    return new Promise(() => {
       return dispatch(modifyOrders(orderId, itemId));
-    });
   };
 
   useEffect(() => {
@@ -53,7 +50,7 @@ function Pending() {
   }, [orders]);
 
   const timeLapsed = (createdAt: string) => {
-    return moment(moment(moment().format()).diff(moment(createdAt)));
+    return +moment(moment(moment().format()).diff(moment(createdAt))) - 7200000
   };
 
   return (
@@ -88,15 +85,8 @@ function Pending() {
                         : "bg-danger"
                     }`}
                   >
-                    <ReactStopwatch
-                      seconds={timeLapsed(order.createdAt).seconds()}
-                      minutes={timeLapsed(order.createdAt).minutes()}
-                      hours={+timeLapsed(order.createdAt).hours() - 2}
-                      limit="24:60:60"
-                      render={({ formatted }: any) => {
-                        return <div>{formatted}</div>;
-                      }}
-                    />
+                <Clock format={'HH:mm:ss'} ticking={true} date={moment(moment(timeLapsed(order.createdAt)).format()).format()} />
+
                   </Card.Header>
                   <Card.Body>
                     <Card.Text>
@@ -107,6 +97,7 @@ function Pending() {
                             onClick={() => {
                               addCheck(order.id, item.id);
                             }}
+                              defaultChecked={false}
                           ></Form.Check>
                         );
                       })}

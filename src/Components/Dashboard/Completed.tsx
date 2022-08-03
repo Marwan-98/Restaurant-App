@@ -52,7 +52,7 @@ function Completed() {
               <Col xs={6} lg={4}>
                 <Card className="m-1 my-4">
                   <Card.Header className="text-end">
-                    {moment().format("MMMM Do YYYY, h:mm:ss a")}
+                    {moment(order.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
                   </Card.Header>
                   <Card.Body>
                     <Card.Text>
