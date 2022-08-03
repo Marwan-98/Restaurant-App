@@ -1,0 +1,10 @@
+.success-page {
+  background-color: #ffffff;
+  height: 100vh;
+  color: #303030;
+}
+
+#check-img {
+  height: 200px;
+  margin: 50px;
+}

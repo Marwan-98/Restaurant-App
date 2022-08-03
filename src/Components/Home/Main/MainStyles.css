@@ -1,0 +1,28 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  color: #303030;
+}
+
+.img-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-icon {
+  height: 15px;
+  cursor: pointer;
+}
+
+@media(max-width: 991px) {
+  .item-img {
+    width:  250px !important;
+  }
+  .card-body{
+    text-align: center !important;
+  }
+}

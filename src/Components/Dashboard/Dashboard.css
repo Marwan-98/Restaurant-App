@@ -1,0 +1,47 @@
+.dashboard-page {
+  min-height: 100vh;
+  background-color: #303030;
+  color: #ffffff !important;
+}
+
+.cards-section {
+  min-height: 100vh;
+  background-color: #ffffff;
+  color: #303030 !important;
+}
+
+.dashboard-page .title {
+  padding: 20px;
+  border-bottom: 1px solid #ffffff;
+}
+
+.dashboard-page ul {
+  background-color: #cd2f17;
+  padding: 0;
+}
+
+.dashboard-page ul li {
+  background-color: #303030;
+  padding: 20px;
+  list-style: none;
+  border-bottom: 1px solid #ffffff;
+  cursor: pointer;
+}
+
+.dashboard-page ul li a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.dashboard-page ul li:active {
+  margin-left: 20px;
+}
+
+.counter {
+  background-color: #21759b;
+  color: white;
+  margin: 5px;
+  padding: 5px;
+  height: 10px;
+  width: 10px;
+}

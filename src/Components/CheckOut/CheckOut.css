@@ -1,0 +1,36 @@
+.checkout-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  color: #303030;
+}
+
+#name-input,
+#mobile-input,
+#address-input,
+#city-input {
+  border: none !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid #303030 !important;
+}
+
+.checkout-input:not(:nth-of-type(odd)) {
+  width: 300px;
+}
+
+button {
+  border-radius: 0 !important;
+}
+
+.bin-icon {
+  height: 15px;
+  margin: 0 0 5px 10px;
+  cursor: pointer;
+}
+
+.checkout-body {
+  min-height: 100vh;
+  margin-top: 80px;
+}
