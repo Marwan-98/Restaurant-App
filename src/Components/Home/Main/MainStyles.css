@@ -10,12 +10,27 @@
 .img-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center !important;
 }
 
 .item-icon {
   height: 15px;
   cursor: pointer;
+}
+
+.item-title {
+  font-size: 16px !important;
+}
+
+.item-description {
+  height: 100px !important;
+  overflow: scroll;
+  scrollbar-width: none;
+  color: #707070 !important;
+}
+
+.item-description::-webkit-scrollbar {
+  display: none;
 }
 
 @media(max-width: 991px) {

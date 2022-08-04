@@ -74,8 +74,10 @@ const itemsImages = [pizza, burger, crepe, drink]
         .min(10, "something's wrong with your phone number"),
     }),
     onSubmit: (values) => {
-      sendOrder(orders, values).then((res) => console.log(res));
-      navigate("/success");
+      sendOrder(orders, values).then((res) => {
+        let orderNum = res.data.client.orderNumber
+        navigate("/success", {state: {orderNumber: orderNum}});
+      });
       dispatch(resetOrderItems());
       dispatch(resetCart());
     },

@@ -24,7 +24,6 @@ function Pending() {
   ).filter((order) => !order.completed)
 
   const dispatch = useDispatch();
-  console.log(orders);
 
   const addCheck = (orderId: number, itemId: number) => {
       return dispatch(modifyOrders(orderId, itemId));
@@ -52,7 +51,6 @@ function Pending() {
   const timeLapsed = (createdAt: string) => {
     return +moment(moment(moment().format()).diff(moment(createdAt))) - 7200000
   };
-
   return (
     <div className="dashboard-page">
       <Row>
@@ -73,16 +71,17 @@ function Pending() {
         <Col className="text-start cards-section p-5" xs={10}>
           <Row className="pt-5">
             {orders.map((order) => (
-              <Col xs={6} lg={4}>
+              <Col xs={6} lg={4} key={order.id}>
                 <Card className="m-1 my-4">
                   <Card.Header
                     className={`text-end ${
-                      +timeLapsed(order.createdAt) < 900000
+                        +moment(timeLapsed(order.createdAt)).minutes() < 15 && 
+                        +moment(timeLapsed(order.createdAt)).hours() < 1
                         ? "bg-success text-white"
-                        : +timeLapsed(order.createdAt) > 900000 &&
-                          +timeLapsed(order.createdAt) < 1800000
+                        : +moment(timeLapsed(order.createdAt)).minutes() < 30 && 
+                          +moment(timeLapsed(order.createdAt)).hours() < 1
                         ? "bg-warning"
-                        : "bg-danger"
+                        : "bg-danger text-white"
                     }`}
                   >
                 <Clock format={'HH:mm:ss'} ticking={true} date={moment(moment(timeLapsed(order.createdAt)).format()).format()} />
@@ -97,7 +96,7 @@ function Pending() {
                             onClick={() => {
                               addCheck(order.id, item.id);
                             }}
-                              defaultChecked={false}
+                            key={item.id}
                           ></Form.Check>
                         );
                       })}

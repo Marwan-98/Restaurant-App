@@ -43,17 +43,19 @@ function Item({
   }
   return (
     <Col xs={12}  md={6} lg={4}>
-      <Card>
+      <Card className="h-100 border-0">
         <Row>
-          <Col className="img-container" xs={12} lg={6}>
+          <Col className="img-container" xs={12} lg={5}>
             <Card.Img className="item-img" src={itemsImages[category.name === "pizza" ? 0 : (category.name === "Burgers") ? 1 : (category.name === "Crepes") ? 2 : 3]} />
           </Col>
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={7}>
             <Card.Body>
-              <Card.Title>{itemName}</Card.Title>
-              <Card.Text>{description}</Card.Text>
-              <Card.Text>Price: LE {price}</Card.Text>
+              <Card.Title className="item-title fw-bold">{itemName}</Card.Title>
+              <Card.Text className="item-description fw-lighter">{description}</Card.Text>
+              <Card.Text className="fw-bold">Price: LE {price}</Card.Text>
               <Card.Text>
+              <Row>
+              <Col className="text-center">
                 <NegativeSign
                   className="item-icon"
                   onClick={() =>
@@ -67,8 +69,12 @@ function Item({
                       popular,
                     })
                   }
-                />{" "}
-                {orderQty}{" "}
+                />
+                </Col>
+                <Col className="text-center" xs={3}>
+                {orderQty}
+                </Col>
+                <Col className="text-center">
                 <PositiveSign
                   className="item-icon"
                   onClick={() =>
@@ -83,6 +89,8 @@ function Item({
                     })
                   }
                 />
+                </Col>
+                </Row>
               </Card.Text>
             </Card.Body>
           </Col>

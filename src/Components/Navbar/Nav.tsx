@@ -95,7 +95,10 @@ function Nav() {
       <Modal
         show={show}
         onHide={() => setShow(false)}
+        fullscreen={'md-down'}
       >
+       <Modal.Header closeButton>
+    </Modal.Header>
         <Modal.Body>
           <div className="cart-body">
             {orders.map((order) => {
@@ -137,7 +140,8 @@ function Nav() {
                         }
                       />
                     </p>
-                    <p>
+                  </Col>
+                    <p className="text-md-end text-center">
                       Total: LE {order.price * order.orderQty}{" "}
                       <BinSign
                         className="bin-icon"
@@ -154,7 +158,6 @@ function Nav() {
                         }
                       />
                     </p>
-                  </Col>
                 </Row>
               );
             })}

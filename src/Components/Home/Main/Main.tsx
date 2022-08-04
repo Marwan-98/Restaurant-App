@@ -29,7 +29,7 @@ function Main() {
         <Tabs
           defaultActiveKey="Popular"
           id="uncontrolled-tab-example"
-          className="mb-3 nav-justified"
+          className="mb-3 nav-fill"
         >
           <Tab eventKey="Popular" title="Popular">
             <Row className="g-4">
