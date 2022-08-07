@@ -8,7 +8,7 @@ import crepe from "../../../Assets/Crepe.png";
 import drink from "../../../Assets/Drink.png";
 import { items } from "../../../utils/types";
 import { useDispatch, useSelector } from "react-redux";
-import { cart } from "../../../actions/cart.action";
+import { addTotal } from "../../../actions/total.action";
 import { addOrderItem, removeOrderItem } from "../../../actions/order.action";
 import {
   addQuantity,
@@ -28,17 +28,17 @@ function Item({
 }: items) {
   const dispatch = useDispatch();
 
-  const total = useSelector((state: { cart: number }) => state.cart);
+  const total = useSelector((state: { total: number }) => state.total);
 
   function orderMaker(type: string, product: items) {
     if (type === "add") {
       dispatch(addOrderItem(product));
       dispatch(addQuantity(product.id));
-      dispatch(cart(product.price));
+      dispatch(addTotal(product.price));
     } else if (type === "remove") {
       dispatch(removeOrderItem(product));
       dispatch(subtractQuantity(product.id));
-      dispatch(cart(-product.price));
+      dispatch(addTotal(-product.price));
     }
   }
   return (

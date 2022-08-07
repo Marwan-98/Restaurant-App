@@ -21,7 +21,10 @@ function Main() {
     });
   }, []);
 
-  console.log(orders);
+
+  useEffect(() => {
+    localStorage.setItem("orders", JSON.stringify(orders));
+  }, [orders]);
 
   return (
     <div className="main" id="menu">

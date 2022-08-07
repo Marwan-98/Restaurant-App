@@ -2,7 +2,7 @@ import { items } from "../utils/types";
 
 export const productsReducer = (
   state: items[] = [],
-  action: { type: string; payload: { products: items[]; id: number } }
+  action: { type: string;payload: { products: items[];id: number } }
 ) => {
   switch (action.type) {
     case "GET_PRODUCTS":

@@ -2,13 +2,13 @@ import { Col, Container, Modal, Navbar, Row } from "react-bootstrap";
 import logo from "../../Assets/logo.png";
 import deliveryTruck from "../../Assets/delivery-truck.png";
 import "./Nav.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { items, order } from "../../utils/types";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactComponent as NegativeSign } from "../../Assets/negative-sign.svg";
 import { ReactComponent as PositiveSign } from "../../Assets/positive-sign.svg";
 import { ReactComponent as BinSign } from "../../Assets/bin-sign.svg";
-import { cart } from "../../actions/cart.action";
+import { addTotal } from "../../actions/total.action";
 import { Link } from "react-router-dom";
 import {
   addOrderItem,
@@ -37,21 +37,25 @@ function Nav() {
   const orders = useSelector((state: { order: items[] }) => state.order).filter(
     (item) => item.orderQty > 0
   );
-  const total = useSelector((state: { cart: number }) => state.cart);
-  console.log(total);
+  const total = useSelector((state: { total: number }) => state.total);
+
+
+  useEffect(() => {
+    localStorage.setItem("total", JSON.stringify(total));
+  }, [total]);
 
   function orderMaker(type: string, product: items) {
     if (type === "add") {
       dispatch(addOrderItem(product));
       dispatch(addQuantity(product.id));
-      dispatch(cart(product.price));
+      dispatch(addTotal(product.price));
     } else if (type === "remove") {
       dispatch(removeOrderItem(product));
       dispatch(subtractQuantity(product.id));
-      dispatch(cart(-product.price));
+      dispatch(addTotal(-product.price));
     } else {
       dispatch(deleteOrderItem(product));
-      dispatch(cart(-product.price * product.orderQty));
+      dispatch(addTotal(-product.price * product.orderQty));
       dispatch(removeQuantity(product.id));
     }
   }
@@ -163,7 +167,7 @@ function Nav() {
             })}
           </div>
           <hr />
-          <p>Subtotal: LE {total}</p>
+          <p>Subtotal: LE {total.toLocaleString()}</p>
           <Link to="/checkout">
             <button className="cart-button" onClick={() => setShow(false)}>
               CHECKOUT
