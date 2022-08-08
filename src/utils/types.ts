@@ -1,5 +1,6 @@
 export type items = {
   id: number;
+  url: string;
   itemName: string;
   description: string;
   price: number;
@@ -36,9 +37,18 @@ export type menu = {
 };
 
 export type order = {
-  products: cartItems[];
-  client: client;
-};
+  orderId: number,
+  itemId: number
+}
+
+export type OrderLine = {
+  id: number;
+  orderId: number;
+  productName: string;
+  productId: number;
+  orderQty: number;
+  completed: boolean;
+}
 
 export type orders = {
   id: number;
@@ -49,22 +59,13 @@ export type orders = {
   mobileNum: number;
   city: string;
   address: string;
-  orderLine: [
-    {
-      id: number;
-      orderId: number;
-      productName: string;
-      productId: number;
-      orderQty: number;
-      completed: boolean;
-    }
-  ];
+  orderLine: OrderLine[];
 };
 
 export type locationType = {
-hash: string
-key: string
-pathname: string
-search: string
-state: any
+  hash: string
+  key: string
+  pathname: string
+  search: string
+  state: any
 }

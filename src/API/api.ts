@@ -15,7 +15,6 @@ export const sendOrder = (products: items[], client: client) => {
       firstName: client.name.split(" ")[0],
       lastName: client.name.split(" ")[1],
       mobileNum: +client.mobile,
-      orderNumber: 400,
       city: client.city,
       address: client.address,
     },

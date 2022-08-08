@@ -1,11 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col, Button, Form, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import pizza from "../../Assets/Pizza.png";
-import burger from "../../Assets/Burger.png";
-import crepe from "../../Assets/Crepe.png";
-import drink from "../../Assets/Drink.png";
 
 import * as Yup from "yup";
 
@@ -17,74 +13,77 @@ import { ReactComponent as NegativeSign } from "../../Assets/negative-sign.svg";
 import { ReactComponent as PositiveSign } from "../../Assets/positive-sign.svg";
 import { ReactComponent as BinSign } from "../../Assets/bin-sign.svg";
 
-import { addTotal } from "../../actions/total.action";
+import { addToTotal, resetTotal } from "../../state/totalSlice";
 import { Link } from "react-router-dom";
 import {
-    addOrderItem,
-    deleteOrderItem,
-    removeOrderItem,
-} from "../../actions/order.action";
+  addToCart,
+  removeFromCart,
+  deleteFromCart,
+  resetCart
+} from "../../state/cartSlice";
 import { useFormik } from "formik";
 import { sendOrder } from "../../API/api";
-import { removeQuantity } from "../../actions/products.action";
+import { addQuantity, subtractQuantity, removeQuantity } from "../../state/menuSlice";
 
-import { resetOrderItems } from "../../actions/order.action"
-import { resetTotal } from "../../actions/total.action"
+import type { RootState } from '../../store/store'
 
 function CheckOut() {
-    const dispatch = useDispatch();
-    const orders = useSelector((state: { order: items[] }) => state.order).filter(
-        (item) => item.orderQty > 0
-    );
-    const total = useSelector((state: { total: number }) => state.total);
+  const dispatch = useDispatch();
+  const orders = useSelector((state: RootState) => state.cart.cart);
+  const total = useSelector((state: RootState) => state.total.total);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const itemsImages = [pizza, burger, crepe, drink]
+  useEffect(() => {
+    localStorage.setItem("orders", JSON.stringify(orders));
+    localStorage.setItem("total", JSON.stringify(total));
+  }, [orders]);
 
-    function orderMaker(type: string, product: items) {
-        if (type === "add") {
-            dispatch(addOrderItem(product));
-            dispatch(addTotal(product.price));
-        } else if (type === "remove") {
-            dispatch(removeOrderItem(product));
-            dispatch(addTotal(-product.price));
-        } else {
-            dispatch(deleteOrderItem(product));
-            dispatch(addTotal(-product.price * product.orderQty));
-            dispatch(removeQuantity(product.id));
-        }
+  function orderMaker(type: string, product: items) {
+    if (type === "add") {
+      dispatch(addToCart(product));
+      dispatch(addQuantity(product.id));
+      dispatch(addToTotal(product.price));
+    } else if (type === "remove") {
+      dispatch(removeFromCart(product));
+      dispatch(subtractQuantity(product.id));
+      dispatch(addToTotal(-product.price));
+    } else {
+      dispatch(deleteFromCart(product));
+      dispatch(addToTotal(-product.price * product.orderQty));
+      dispatch(removeQuantity(product.id));
     }
+  }
 
-    const formik = useFormik({
-        initialValues: {
-            name: "",
-            mobile: "",
-            address: "",
-            city: "",
-        },
-        validationSchema: Yup.object({
-            name: Yup.string()
-                .required("Name is required")
-                .max(20, "limit passed")
-                .min(3, "Please write 3 characters or more")
-                .matches(/[a-zA-Z]+\s[a-zA-Z]+/, "please put your first name and last name"),
-            mobile: Yup.string()
-                .required("mobile is required")
-                .min(10, "something's wrong with your phone number"),
-        }),
-        onSubmit: (values) => {
-            sendOrder(orders, values).then((res) => {
-                let orderNum = res.data.client.orderNumber
-                navigate("/success", { state: { orderNumber: orderNum } });
-            });
-            dispatch(resetOrderItems());
-            dispatch(resetTotal());
-        },
-    });
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      mobile: "",
+      address: "",
+      city: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .required("Name is required")
+        .max(20, "limit passed")
+        .min(3, "Please write 3 characters or more")
+        .matches(/[a-zA-Z]+\s[a-zA-Z]+/, "please put your first name and last name"),
+      mobile: Yup.string()
+        .required("mobile is required")
+        .min(10, "something's wrong with your phone number"),
+    }),
+    onSubmit: (values) => {
+      sendOrder(orders, values).then((res) => {
+        let orderNum = res.data.id
+        navigate("/success", { state: { orderNumber: orderNum } });
+      });
+      dispatch(resetCart());
+      dispatch(resetTotal());
+    },
+  });
 
-    return (
-        <div className="checkout-body">
+  return (
+    <div className="checkout-body">
       <Container>
         <Row className="d-flex justify-content-center align-items-center">
           <Col md={8} xs={12}>
@@ -152,7 +151,7 @@ function CheckOut() {
                 return (
                   <Row>
                     <Col className="text-center" xs={12} lg={6}>
-                      <img className="check-item-img" src={itemsImages[order.category.name === "pizza" ? 0 : (order.category.name === "Burgers") ? 1 : (order.category.name === "Crepes") ? 2 : 3]} />
+                      <img className="check-item-img" src={order.url} alt={order.itemName} />
                     </Col>
                     <Col xs={12}  lg={6} className="text-center">
                       <p>{order.itemName}</p>
@@ -161,29 +160,13 @@ function CheckOut() {
                         <NegativeSign
                           className="cart-icon"
                           onClick={() =>
-                            orderMaker("remove", {
-                              itemName: order.itemName,
-                              description: order.description,
-                              id: order.id,
-                              price: order.price,
-                              orderQty: order.orderQty,
-                              category: order.category,
-                              popular: order.popular,
-                            })
+                            orderMaker("remove", order)
                           }
                         />
                         <PositiveSign
                           className="cart-icon"
                           onClick={() =>
-                            orderMaker("add", {
-                              itemName: order.itemName,
-                              description: order.description,
-                              id: order.id,
-                              price: order.price,
-                              orderQty: order.orderQty,
-                              category: order.category,
-                              popular: order.popular,
-                            })
+                            orderMaker("add", order)
                           }
                         />
                       </p>
@@ -192,15 +175,7 @@ function CheckOut() {
                         <BinSign
                           className="bin-icon"
                           onClick={() =>
-                            orderMaker("delete", {
-                              itemName: order.itemName,
-                              description: order.description,
-                              id: order.id,
-                              price: order.price,
-                              orderQty: order.orderQty,
-                              category: order.category,
-                              popular: order.popular,
-                            })
+                            orderMaker("delete", order)
                           }
                         />
                       </p>
@@ -215,7 +190,7 @@ function CheckOut() {
         </Row>
       </Container>
     </div>
-    );
+  );
 }
 
 export default CheckOut;

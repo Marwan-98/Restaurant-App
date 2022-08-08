@@ -1,19 +1,21 @@
-import { Container, Tab, Tabs, Card, Col, Row } from "react-bootstrap";
+import { Container, Tab, Tabs, Row } from "react-bootstrap";
 import "./MainStyles.css";
 import { useDispatch, useSelector } from "react-redux";
 import Item from "./Item";
-import { items, menu } from "../../../utils/types";
 import { useEffect } from "react";
 import { getMenu } from "../../../API/api";
-import { getProducts } from "../../../actions/products.action";
+
+import type { RootState } from '../../../store/store'
+import { getProducts } from "../../../state/menuSlice"
 
 function Main() {
   const dispatch = useDispatch();
 
-  const products = useSelector(
-    (state: { products: items[] }) => state.products
-  );
-  const orders = useSelector((state: { order: items[] }) => state.order);
+  const products = useSelector((state: RootState) => state.menu.menu)
+
+  const orders = useSelector((state: RootState) => state.cart.cart);
+
+  const total = useSelector((state: RootState) => state.total.total);
 
   useEffect(() => {
     getMenu().then((res) => {
@@ -24,6 +26,7 @@ function Main() {
 
   useEffect(() => {
     localStorage.setItem("orders", JSON.stringify(orders));
+    localStorage.setItem("total", JSON.stringify(total));
   }, [orders]);
 
   return (
@@ -38,16 +41,7 @@ function Main() {
             <Row className="g-4">
               {products.map((product) => {
                 return (
-                  <Item
-                    itemName={product.itemName}
-                    description={product.description}
-                    id={product.id}
-                    price={product.price}
-                    orderQty={product.orderQty ? product.orderQty : 0}
-                    category={product.category}
-                    popular={product.popular}
-                    key={product.id}
-                  />
+                  <Item item={product}/>
                 );
               })}
             </Row>
@@ -56,18 +50,11 @@ function Main() {
                         <Row className="g-4">
               {products.map((product) => {
                 if(product.category.name === "pizza") {
-                return (
-                  <Item
-                    itemName={product.itemName}
-                    description={product.description}
-                    id={product.id}
-                    price={product.price}
-                    orderQty={product.orderQty ? product.orderQty : 0}
-                    category={product.category}
-                    popular={product.popular}
-                    key={product.id}
-                  />
-                );
+                  return (
+                    <Item item={product}/>
+                  );
+                } else {
+                  return null
                 }
               })}
             </Row>
@@ -77,17 +64,11 @@ function Main() {
               {products.map((product) => {
                 if(product.category.name === "Burgers") {
                 return (
-                  <Item
-                    itemName={product.itemName}
-                    description={product.description}
-                    id={product.id}
-                    price={product.price}
-                    orderQty={product.orderQty ? product.orderQty : 0}
-                    category={product.category}
-                    popular={product.popular}
-                    key={product.id}
-                  />
+                  <Item item={product}/>
+
                 );
+                } else {
+                  return null
                 }
               })}
             </Row>
@@ -97,17 +78,11 @@ function Main() {
               {products.map((product) => {
                 if(product.category.name === "Crepes") {
                 return (
-                  <Item
-                    itemName={product.itemName}
-                    description={product.description}
-                    id={product.id}
-                    price={product.price}
-                    orderQty={product.orderQty ? product.orderQty : 0}
-                    category={product.category}
-                    popular={product.popular}
-                    key={product.id}
-                  />
+                  <Item item={product}/>
+
                 );
+                } else {
+                  return null
                 }
               })}
             </Row>
@@ -117,17 +92,11 @@ function Main() {
               {products.map((product) => {
                 if(product.category.name === "Drinks") {
                 return (
-                  <Item
-                    itemName={product.itemName}
-                    description={product.description}
-                    id={product.id}
-                    price={product.price}
-                    orderQty={product.orderQty ? product.orderQty : 0}
-                    category={product.category}
-                    popular={product.popular}
-                    key={product.id}
-                  />
+                  <Item item={product}/>
+
                 );
+                } else {
+                  return null
                 }
               })}
             </Row>

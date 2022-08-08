@@ -2,65 +2,47 @@ import { Col, Container, Modal, Navbar, Row } from "react-bootstrap";
 import logo from "../../Assets/logo.png";
 import deliveryTruck from "../../Assets/delivery-truck.png";
 import "./Nav.css";
-import { useState, useEffect } from "react";
-import { items, order } from "../../utils/types";
+import { useState } from "react";
+import { items } from "../../utils/types";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactComponent as NegativeSign } from "../../Assets/negative-sign.svg";
 import { ReactComponent as PositiveSign } from "../../Assets/positive-sign.svg";
 import { ReactComponent as BinSign } from "../../Assets/bin-sign.svg";
-import { addTotal } from "../../actions/total.action";
+import { addToTotal } from "../../state/totalSlice";
 import { Link } from "react-router-dom";
 import {
-  addOrderItem,
-  deleteOrderItem,
-  removeOrderItem,
-} from "../../actions/order.action";
-import { removeQuantity } from "../../actions/products.action";
+  addToCart, removeFromCart, deleteFromCart
+} from "../../state/cartSlice";
+
+import type { RootState } from '../../store/store'
 
 import {
   addQuantity,
   subtractQuantity,
-} from "../../actions/products.action";
-
-
-import pizza from "../../Assets/Pizza.png";
-import burger from "../../Assets/Burger.png";
-import crepe from "../../Assets/Crepe.png";
-import drink from "../../Assets/Drink.png";
-
-import * as Yup from "yup";
-
+  removeQuantity
+} from "../../state/menuSlice";
 
 function Nav() {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
-  const orders = useSelector((state: { order: items[] }) => state.order).filter(
-    (item) => item.orderQty > 0
-  );
-  const total = useSelector((state: { total: number }) => state.total);
-
-
-  useEffect(() => {
-    localStorage.setItem("total", JSON.stringify(total));
-  }, [total]);
+  const orders = useSelector((state: RootState) => state.cart.cart);
+  const total = useSelector((state: RootState) => state.total.total);
 
   function orderMaker(type: string, product: items) {
     if (type === "add") {
-      dispatch(addOrderItem(product));
+      dispatch(addToCart(product));
       dispatch(addQuantity(product.id));
-      dispatch(addTotal(product.price));
+      dispatch(addToTotal(product.price));
     } else if (type === "remove") {
-      dispatch(removeOrderItem(product));
+      dispatch(removeFromCart(product));
       dispatch(subtractQuantity(product.id));
-      dispatch(addTotal(-product.price));
+      dispatch(addToTotal(-product.price));
     } else {
-      dispatch(deleteOrderItem(product));
-      dispatch(addTotal(-product.price * product.orderQty));
+      dispatch(deleteFromCart(product));
+      dispatch(addToTotal(-product.price * product.orderQty));
       dispatch(removeQuantity(product.id));
     }
   }
-
-  const itemsImages = [pizza, burger, crepe, drink]
 
   return (
     <Navbar fixed="top" className="navbar-style">
@@ -109,7 +91,7 @@ function Nav() {
               return (
                 <Row key={Math.random()}>
                   <Col className="text-center" xs={12} md={6}>
-                    <img className="nav-item-img" src={itemsImages[order.category.name === "pizza" ? 0 : (order.category.name === "Burgers") ? 1 : (order.category.name === "Crepes") ? 2 : 3]} />
+                    <img className="nav-item-img" src={order.url} alt={order.itemName}/>
                   </Col>
                   <Col xs={12} md={6} className="text-center">
                     <p>{order.itemName}</p>
@@ -118,29 +100,13 @@ function Nav() {
                       <NegativeSign
                         className="cart-icon"
                         onClick={() =>
-                          orderMaker("remove", {
-                            itemName: order.itemName,
-                            description: order.description,
-                            id: order.id,
-                            price: order.price,
-                            orderQty: order.orderQty,
-                            category: order.category,
-                            popular: order.popular,
-                          })
+                          orderMaker("remove", order)
                         }
                       />
                       <PositiveSign
                         className="cart-icon"
                         onClick={() =>
-                          orderMaker("add", {
-                            itemName: order.itemName,
-                            description: order.description,
-                            id: order.id,
-                            price: order.price,
-                            orderQty: order.orderQty,
-                            category: order.category,
-                            popular: order.popular,
-                          })
+                          orderMaker("add", order)
                         }
                       />
                     </p>
@@ -150,15 +116,7 @@ function Nav() {
                       <BinSign
                         className="bin-icon"
                         onClick={() =>
-                          orderMaker("delete", {
-                            itemName: order.itemName,
-                            description: order.description,
-                            id: order.id,
-                            price: order.price,
-                            orderQty: order.orderQty,
-                            category: order.category,
-                            popular: order.popular,
-                          })
+                          orderMaker("delete", order)
                         }
                       />
                     </p>

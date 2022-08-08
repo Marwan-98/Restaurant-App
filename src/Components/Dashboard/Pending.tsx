@@ -1,32 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
-  Container,
   Row,
   Col,
   Card,
-  Button,
-  ListGroup,
   Form,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getOrders, modifyOrders } from "../../actions/orders.action";
+import { getOrders, check } from "../../state/ordersSlice";
 import { checkOrders, getDashboardOrders } from "../../API/api";
-import { orders } from "../../utils/types";
 import "./Dashboard.css";
 import moment from "moment";
 
 import Clock from "react-live-clock";
 
+import type { RootState } from '../../store/store'
+
 function Pending() {
   const orders = useSelector(
-    (state: { orders: orders[] }) => state.orders
+    (state: RootState) => state.orders.orders
   ).filter((order) => !order.completed)
 
   const dispatch = useDispatch();
 
   const addCheck = (orderId: number, itemId: number) => {
-      return dispatch(modifyOrders(orderId, itemId));
+    return dispatch(check({ orderId, itemId }));
   };
 
   useEffect(() => {
@@ -59,16 +57,20 @@ function Pending() {
             <h2>Dashboard</h2>
           </div>
           <ul>
+          <Link to="/dashboard/pending">
             <li>
-              <Link to="/dashboard/pending">Pending Orders</Link>
+              Pending Orders
               <span className="counter">{orders.length}</span>
             </li>
+            </Link>
+            <Link to="/dashboard/completed">
             <li>
-              <Link to="/dashboard/completed">Completed Orders</Link>
+              Completed Orders
             </li>
+            </Link>
           </ul>
         </Col>
-        <Col className="text-start cards-section p-5" xs={10}>
+        <Col className="text-start cards-section pt-5" xs={10}>
           <Row className="pt-5">
             {orders.map((order) => (
               <Col xs={6} lg={4} key={order.id}>

@@ -2,6 +2,7 @@
   min-height: 100vh;
   background-color: #303030;
   color: #ffffff !important;
+  overflow-x: hidden;
 }
 
 .cards-section {
@@ -21,16 +22,17 @@
 }
 
 .dashboard-page ul li {
+  text-decoration: none !important;
   background-color: #303030;
+  color: #ffffff;
   padding: 20px;
   list-style: none;
   border-bottom: 1px solid #ffffff;
   cursor: pointer;
 }
 
-.dashboard-page ul li a {
-  text-decoration: none;
-  color: #ffffff;
+.dashboard-page ul a{
+  text-decoration: none !important;
 }
 
 .dashboard-page ul li:active {
@@ -46,6 +48,6 @@
   width: 10px;
 }
 
-.form-check-input:checked[type=checkbox] + label {
-    text-decoration: line-through ;
+.form-check-input:checked[type=checkbox]+label {
+  text-decoration: line-through;
 }

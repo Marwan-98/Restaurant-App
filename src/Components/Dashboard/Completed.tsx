@@ -1,25 +1,21 @@
 import moment from "moment";
 import React, { useEffect } from "react";
 import {
-  Container,
   Row,
   Col,
   Card,
-  Button,
-  ListGroup,
   Form,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getOrders } from "../../actions/orders.action";
+import { getOrders } from "../../state/ordersSlice";
 import { getDashboardOrders } from "../../API/api";
-import { orders } from "../../utils/types";
 import "./Dashboard.css";
 
+import type { RootState } from '../../store/store'
+
 function Completed() {
-  const orders = useSelector(
-    (state: { orders: orders[] }) => state.orders
-  ).filter((order) => order.completed);
+  const orders = useSelector((state: RootState) => state.orders.orders)
 
   const dispatch = useDispatch();
 
@@ -37,13 +33,17 @@ function Completed() {
             <h2>Dashboard</h2>
           </div>
           <ul>
+          <Link to="/dashboard/pending">
             <li>
-              <Link to="/dashboard/pending">Pending Orders</Link>
+              Pending Orders
             </li>
+            </Link>
+            <Link to="/dashboard/completed">
             <li>
-              <Link to="/dashboard/completed">Completed Orders</Link>
+              Completed Orders
               <span className="counter">{orders.length}</span>
             </li>
+            </Link>
           </ul>
         </Col>
         <Col className="text-start cards-section p-5" xs={10}>
