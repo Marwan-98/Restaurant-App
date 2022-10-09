@@ -2,7 +2,7 @@ import axios from "axios";
 import { client, items } from "../utils/types";
 
 const api = axios.create({
-  baseURL: "https://restaurant-t4q6.onrender.com",
+  baseURL: "https://restaurant-server.onrender.com",
 });
 
 export const getMenu = () => {
