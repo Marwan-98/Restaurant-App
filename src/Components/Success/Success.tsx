@@ -1,8 +1,7 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import check from "../../Assets/checked.png";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom";
 import {locationType} from "../../utils/types"
 
 import "./Success.css";

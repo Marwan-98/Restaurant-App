@@ -47,7 +47,10 @@ function Pending() {
   }, [orders]);
 
   const timeLapsed = (createdAt: string) => {
-    return +moment(moment(moment().format()).diff(moment(createdAt))) - 7200000
+    let now = Date.now();
+    let then = new Date(createdAt).getTime();
+    let diff = Math.round(now - then);
+    return diff
   };
   return (
     <div className="dashboard-page">
@@ -77,16 +80,14 @@ function Pending() {
                 <Card className="m-1 my-4">
                   <Card.Header
                     className={`text-end ${
-                        +moment(timeLapsed(order.createdAt)).minutes() < 15 && 
-                        +moment(timeLapsed(order.createdAt)).hours() < 1
+                        timeLapsed(order.createdAt) < 900000
                         ? "bg-success text-white"
-                        : +moment(timeLapsed(order.createdAt)).minutes() < 30 && 
-                          +moment(timeLapsed(order.createdAt)).hours() < 1
+                        : timeLapsed(order.createdAt) < 1800000
                         ? "bg-warning"
                         : "bg-danger text-white"
                     }`}
                   >
-                <Clock format={'HH:mm:ss'} ticking={true} date={moment(moment(timeLapsed(order.createdAt)).format()).format()} />
+                <Clock format={'HH:mm:ss'} ticking={true} date={timeLapsed(order.createdAt)} timezone={"Etc/UTC"} />
 
                   </Card.Header>
                   <Card.Body>
